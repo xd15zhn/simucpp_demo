@@ -1,0 +1,10 @@
+*.a
+*.bat
+*.user
+.vscode
+/.vscode/
+/build/
+/out/
+/.vs/
+CMakeLists.txt
+main.cpp
