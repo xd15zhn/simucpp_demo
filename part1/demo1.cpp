@@ -15,18 +15,18 @@ int main()
     Simulator sim1(10);
 
     // 初始化模块
-    MIntegrator *integrator1 = new MIntegrator(&sim1);
-    MSum *sum1 = new MSum(&sim1);
-    MInput *input1 = new MInput(&sim1);
-    MOutput *output1 = new MOutput(&sim1);
+    UIntegrator *integrator1 = new UIntegrator(&sim1);
+    USum *sum1 = new USum(&sim1);
+    UInput *input1 = new UInput(&sim1);
+    UOutput *output1 = new UOutput(&sim1);
 
     // 模块之间的连接
-    sim1.connect(input1, sum1);
+    sim1.connectU(input1, sum1);
     sum1->Set_InputGain(1);
-    sim1.connect(sum1, integrator1);
-    sim1.connect(integrator1, sum1);
+    sim1.connectU(sum1, integrator1);
+    sim1.connectU(integrator1, sum1);
     sum1->Set_InputGain(-0.5);
-    sim1.connect(integrator1, output1);
+    sim1.connectU(integrator1, output1);
 
     // 参数设置
     integrator1->Set_InitialValue(0);
