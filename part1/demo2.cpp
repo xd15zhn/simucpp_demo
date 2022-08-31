@@ -1,4 +1,5 @@
 /*多个单元模块*/
+#include <iostream>
 #include "simucpp.hpp"
 using namespace simucpp;
 using namespace std;
@@ -6,28 +7,28 @@ using namespace std;
 int main()
 {
     Simulator sim1;
-    FMInput(source, &sim1);
-    FMIntegrator(integrator1, &sim1);
-    FMUnitDelay(delay1, &sim1);
-    FMTransportDelay(tdelay1, &sim1);
-    FMZOH(zoh1, &sim1);
-    FMOutput(out0, &sim1);
-    FMOutput(out1, &sim1);
-    FMOutput(out2, &sim1);
-    FMOutput(out3, &sim1);
-    FMOutput(out4, &sim1);
+    FUInput(uin1, &sim1);
+    FUIntegrator(uint1, &sim1);
+    FUUnitDelay(delay1, &sim1);
+    FUTransportDelay(tdelay1, &sim1);
+    FUZOH(zoh1, &sim1);
+    FUOutput(out0, &sim1);
+    FUOutput(out1, &sim1);
+    FUOutput(out2, &sim1);
+    FUOutput(out3, &sim1);
+    FUOutput(out4, &sim1);
 
-    sim1.connect(source, out0);
-    sim1.connect(source, integrator1);
-    sim1.connect(source, delay1);
-    sim1.connect(source, tdelay1);
-    sim1.connect(source, zoh1);
-    sim1.connect(integrator1, out1);
-    sim1.connect(delay1, out2);
-    sim1.connect(tdelay1, out3);
-    sim1.connect(zoh1, out4);
+    sim1.connectU(uin1, out0);
+    sim1.connectU(uin1, uint1);
+    sim1.connectU(uin1, delay1);
+    sim1.connectU(uin1, tdelay1);
+    sim1.connectU(uin1, zoh1);
+    sim1.connectU(uint1, out1);
+    sim1.connectU(delay1, out2);
+    sim1.connectU(tdelay1, out3);
+    sim1.connectU(zoh1, out4);
 
-    source->Set_Function([](double t){return sin(t);});
+    uin1->Set_Function([](double t){return sin(t);});
     tdelay1->Set_InitialValue(1);
     tdelay1->Set_DelayTime(1.5);
     // out0->Set_EnableStore(false);

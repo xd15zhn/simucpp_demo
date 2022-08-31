@@ -20,14 +20,14 @@ int main()
 {
     vector<double> data = Read_data("sinewave");
     Simulator sim1(20);
-    MInput *input1 = new MInput(&sim1);
-    MOutput *output1 = new MOutput(&sim1);
+    FUInput(uin1, &sim1);
+    FUOutput(uout1, &sim1);
 
-    input1->Set_Continuous(false);
-    input1->Set_SampleTime(0.2);
-    input1->Set_InputData(data);
+    uin1->Set_Continuous(false);
+    uin1->Set_SampleTime(0.2);
+    uin1->Set_InputData(data);
 
-    sim1.connect(input1, output1);
+    sim1.connectU(uin1, uout1);
 
     sim1.Initialize();
     sim1.Simulate();
