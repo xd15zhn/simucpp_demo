@@ -8,19 +8,19 @@ int main()
 {
     Simulator sim1;
     auto *dtf1 = new DiscreteTransferFcn(&sim1, vecdble{0.008125, 0.01625, 0.008125}, vecdble{1.7, -0.7325});
-    FMInput(min1, &sim1);
-    FMNoise(min2, &sim1);
-    FMZOH(mzoh1, &sim1);
-    FMSum(msum1, &sim1);
-    FMOutput(mout1, &sim1);
-    FMOutput(mout2, &sim1);
+    FUInput(min1, &sim1);
+    FUNoise(min2, &sim1);
+    FUZOH(mzoh1, &sim1);
+    FUSum(msum1, &sim1);
+    FUOutput(mout1, &sim1);
+    FUOutput(mout2, &sim1);
 
-    sim1.connect(min1, mzoh1);
-    sim1.connect(mzoh1, msum1);
-    sim1.connect(min2, msum1);
-    sim1.connect(msum1, mout1);
-    sim1.connect(msum1, dtf1);
-    sim1.connect(dtf1, mout2);
+    sim1.connectU(min1, mzoh1);
+    sim1.connectU(mzoh1, msum1);
+    sim1.connectU(min2, msum1);
+    sim1.connectU(msum1, mout1);
+    sim1.connectU(msum1, dtf1);
+    sim1.connectU(dtf1, mout2);
 
     min1->Set_Function([](double t){return sin(t);});
     min2->Set_Variance(0.1);
