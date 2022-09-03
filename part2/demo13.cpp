@@ -22,20 +22,20 @@ public:
         return nullptr;
     };
     void Initialize(Simulator *sim){
-        sum1 = new MSum(sim);
-        sum2 = new MSum(sim);
+        SUSum(sum1, sim);
+        SUSum(sum2, sim);
+        SUGain(in1, sim);
+        SUGain(in2, sim);
         tr1 = new TransferFcn(sim, vector<double>{1}, vector<double>{L, R});
         tr2 = new TransferFcn(sim, vector<double>{1}, vector<double>{J, f});
-        in1 = new MConnector(sim);
-        in2 = new MConnector(sim);
-        sim->connect(in1, sum1);
-        sim->connect(sum1, tr1);
-        sim->connect(tr1, sum2);
+        sim->connectU(in1, sum1);
+        sim->connectU(sum1, tr1);
+        sim->connectU(tr1, sum2);
         sum2->Set_InputGain(Cm);
-        sim->connect(sum2, tr2);
-        sim->connect(tr2, sum1);
+        sim->connectU(sum2, tr2);
+        sim->connectU(tr2, sum1);
         sum1->Set_InputGain(-Ce);
-        sim->connect(in2, sum2);
+        sim->connectU(in2, sum2);
         sum2->Set_InputGain(-1);
     }
     double L=0.0189;  // 线圈电感
@@ -45,9 +45,9 @@ public:
     double Cm=2.589;  // 转矩系数
     double Ce=2;  // 反电动势系数
 private:
-    MSum *sum1, *sum2;
+    USum *sum1, *sum2;
     TransferFcn *tr1, *tr2;
-    MConnector *in1, *in2;
+    UGain *in1, *in2;
 };
 
 int main()
@@ -55,27 +55,27 @@ int main()
     Simulator sim1(2);
     DCMotor *motor1 = new DCMotor(&sim1);
     DCMotor *motor2 = new DCMotor;
-    FMInput(Voltage, &sim1);
-    FMInput(Loadtorque, &sim1);
-    FMOutput(Current1, &sim1);
-    FMOutput(omega1, &sim1);
-    FMOutput(Current2, &sim1);
-    FMOutput(omega2, &sim1);
+    FUInput(Voltage, &sim1);
+    FUInput(Loadtorque, &sim1);
+    FUOutput(Current1, &sim1);
+    FUOutput(omega1, &sim1);
+    FUOutput(Current2, &sim1);
+    FUOutput(omega2, &sim1);
 
     Voltage->Set_Function([](double t){return 400.0;});
     Loadtorque->Set_Function([](double t){return t<1?0:100.0;});
     motor2->Ce = 0.1;
     motor2->Initialize(&sim1);
 
-    sim1.connect(Voltage, motor1, 0);
-    sim1.connect(Loadtorque, motor1, 1);
-    sim1.connect(motor1, 0, omega1);
-    sim1.connect(motor1, 1, Current1);
+    sim1.connectU(Voltage, motor1, 0);
+    sim1.connectU(Loadtorque, motor1, 1);
+    sim1.connectU(motor1, 0, omega1);
+    sim1.connectU(motor1, 1, Current1);
 
-    sim1.connect(Voltage, motor2, 0);
-    sim1.connect(Loadtorque, motor2, 1);
-    sim1.connect(motor2, 0, omega2);
-    sim1.connect(motor2, 1, Current2);
+    sim1.connectU(Voltage, motor2, 0);
+    sim1.connectU(Loadtorque, motor2, 1);
+    sim1.connectU(motor2, 0, omega2);
+    sim1.connectU(motor2, 1, Current2);
 
     sim1.Initialize();
     sim1.Simulate();
