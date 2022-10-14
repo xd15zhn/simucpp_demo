@@ -3,7 +3,7 @@
 #include "simucpp.hpp"
 using namespace simucpp;
 using namespace std;
-#define DURATION_T1
+// #define DURATION_T1
 int main()
 {
     Simulator sim1;
@@ -16,7 +16,7 @@ int main()
     FUOutput(mdy, &sim1);
 
     mdin1->Set_Function([](double t) { return 1.0; });
-    // mdy->Set_InputGain(10);
+    mdy->Set_InputGain(10);
 #ifdef DURATION_T1
     auto* mdDz = new DiscreteTransferFcn(&sim1, vector<double>{6.64, -6.008}, vector<double>{0.3679});  // T=1时的离散控制器
     sim1.Set_Endtime(20);
@@ -27,16 +27,15 @@ int main()
     mdzoh1->Set_SampleTime(0.2);
     mdDz->Set_SampleTime(0.2);
 #endif
-    sim1.Set_PrintPrecision(16);
 
     sim1.connectU(mdin1, mdsum1);
     sim1.connectU(mdsum1, mdzoh1);
-    sim1.connectU(mdzoh1, mdDz);
-    sim1.connectU(mdDz, mdGs);
-    sim1.connectU(mdGs, mdsum1);
+    sim1.connectU(mdzoh1, mdDz, 0);
+    sim1.connectU(mdDz, 0, mdGs, 0);
+    sim1.connectU(mdGs, 0, mdsum1);
     mdsum1->Set_InputGain(-1);
-    sim1.connectU(mdDz, mdu);
-    sim1.connectU(mdGs, mdy);
+    sim1.connectU(mdDz, 0, mdu);
+    sim1.connectU(mdGs, 0, mdy);
 
     sim1.Initialize();
     sim1.Simulate();
