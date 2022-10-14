@@ -9,7 +9,6 @@ int main()
 {
 #ifdef DURATION_T1
     Simulator sim1(1);
-    sim1.Set_SimStep(1/double(1<<10));
 #else
     Simulator sim1(0.2);
 #endif
