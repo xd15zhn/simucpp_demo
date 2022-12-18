@@ -20,25 +20,25 @@ public:
         return nullptr;
     };
     void Initialize(Simulator *sim){
-        mdintegral = new MIntegrator(sim, "mdintegral");
-        mddifferential = new TransferFcn(sim, vector<double>{1, 0}, vector<double>{1, _N}, "mddifferential");
-        mdin1 = new MConnector(sim, "mdin1");
-        mdout1 = new MSum(sim, "mdout1");
-        sim->connect(mdin1, mdintegral);
-        sim->connect(mdin1, mddifferential);
-        sim->connect(mdin1, mdout1);
-        sim->connect(mdintegral, mdout1);
-        sim->connect(mddifferential, mdout1);
+        mdintegral = new UIntegrator(sim, "mdintegral");
+        mddifferential = new TransferFcn(sim, vecdble{1, 0}, vecdble{1, _N}, "mddifferential");
+        mdin1 = new UGain(sim, "mdin1");
+        mdout1 = new USum(sim, "mdout1");
+        sim->connectU(mdin1, mdintegral);
+        sim->connectU(mdin1, mddifferential, 0);
+        sim->connectU(mdin1, mdout1);
+        sim->connectU(mdintegral, mdout1);
+        sim->connectU(mddifferential, 0, mdout1);
         mdout1->Set_InputGain(_Kp, 0);
         mdout1->Set_InputGain(_Ki, 1);
         mdout1->Set_InputGain(_Kd, 2);
     }
     double _Kp=1, _Ki=0, _Kd=0, _N=100;
 private:
-    MIntegrator *mdintegral;
+    UIntegrator *mdintegral;
     TransferFcn *mddifferential;
-    MConnector *mdin1;
-    MSum *mdout1;
+    UGain *mdin1;
+    USum *mdout1;
 };
 
 int main()
